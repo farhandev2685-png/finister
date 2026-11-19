@@ -18,9 +18,22 @@ const globalForDb = globalThis;
 function createDb() {
   const url = process.env.DATABASE_URL;
   if (url) {
-    return drizzlePostgres(postgres(url), {
+    const client = postgres(url);
+    // drizzle-orm's postgres-js driver replaces the outbound serializers
+    // for date/timestamp OIDs with a passthrough (drizzle-orm#5789), which
+    // makes Date bind params crash with ERR_INVALID_ARG_TYPE. Capture the
+    // native serializers and restore them after drizzle() mutates the client.
+    const dateSerializers = {};
+    for (const oid of ["1184", "1082", "1083", "1114", "1182", "1185", "1115", "1231"]) {
+      dateSerializers[oid] = client.options.serializers[oid];
+    }
+    const db = drizzlePostgres(client, {
       schema
     });
+    for (const [oid, serializer] of Object.entries(dateSerializers)) {
+      client.options.serializers[oid] = serializer;
+    }
+    return db;
   }
   // Dev fallback: embedded Postgres, no setup needed.
   fs.mkdirSync(PGLITE_DIR, {
