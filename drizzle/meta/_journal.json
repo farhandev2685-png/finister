@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1795018773487,
+      "tag": "0000_wise_madrox",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795020360440,
+      "tag": "0001_cynical_otto_octavius",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795021253787,
+      "tag": "0002_lethal_arclight",
+      "breakpoints": true
+    }
+  ]
+}
